@@ -31,7 +31,6 @@ const Book = conn.define('Book', {
   }
 }, {
   freezeTableName: true,
-  timestamps: false
 });
 
 Book.sync().then(() => {
