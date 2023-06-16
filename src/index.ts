@@ -1,4 +1,4 @@
-import express, { Application } from "express"
+import express, { Application, Request } from "express"
 import bookRouter from "./routes/book.route";
 import { errorHandler } from "./middlewares/errorHandle.middleware";
 

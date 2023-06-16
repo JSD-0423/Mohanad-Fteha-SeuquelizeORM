@@ -1,4 +1,4 @@
-import { NextFunction, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import Book from "../db/models/Book"
 import BookDTO from "../dto/book.dto"
 import { ValidationErrorItem } from "sequelize"
@@ -12,8 +12,8 @@ const getBooks = async (res: Response, next: NextFunction) => {
   }
 }
 
-const createBook = (body: BookDTO, res: Response) => {
-  const { title, author, isbn } = body
+const createBook = (req: Request<{}, {}, BookDTO>, res: Response) => {
+  const { title, author, isbn } = req.body
 
   Book.create({ title, author, isbn, }).then((value) => {
     res.status(201).json(value.dataValues);
