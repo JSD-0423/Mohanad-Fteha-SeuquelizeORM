@@ -39,4 +39,16 @@ const getBookById = async (req: Request<{ id: number }>, res: Response, next: Ne
   }
 }
 
-export { getBooks, createBook, getBookById }
+const deleteBook = async (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
+  const { id } = req.params
+
+  try {
+    const ack = await Book.destroy({ where: { id } })
+    if (!ack) throw new CustomError("Book not found", 404);
+
+    res.status(200).json({ msg: "Successfully deleted" })
+  } catch (e) {
+    next(e);
+  }
+}
+export { getBooks, createBook, getBookById, deleteBook }
