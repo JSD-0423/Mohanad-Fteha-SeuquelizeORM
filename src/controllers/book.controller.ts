@@ -9,7 +9,7 @@ const getBooks = async (res: Response, next: NextFunction) => {
     const books = await Book.findAll()
     res.status(200).json(books)
   } catch (e) {
-    return next(e);
+    return next(e)
   }
 }
 
@@ -31,7 +31,7 @@ const getBookById = async (req: Request<{ id: number }>, res: Response, next: Ne
   const { id } = req.params
   try {
     const ack = await Book.findByPk(id)
-    if (!ack) throw new CustomError("Book not found", 404);
+    if (!ack) throw new CustomError("Book not found", 404)
 
     res.status(200).json(ack.dataValues)
   } catch (e) {
@@ -44,11 +44,11 @@ const deleteBook = async (req: Request<{ id: number }>, res: Response, next: Nex
 
   try {
     const ack = await Book.destroy({ where: { id } })
-    if (!ack) throw new CustomError("Book not found", 404);
+    if (!ack) throw new CustomError("Book not found", 404)
 
     res.status(200).json({ msg: "Successfully deleted" })
   } catch (e) {
-    next(e);
+    next(e)
   }
 }
 export { getBooks, createBook, getBookById, deleteBook }

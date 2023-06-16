@@ -1,17 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
-import { ValidationError, ValidationErrorItem } from 'sequelize';
+import { Request, Response, NextFunction } from 'express'
+import { ValidationError, ValidationErrorItem } from 'sequelize'
 
 export class CustomError extends Error {
-  statusCode: number;
+  statusCode: number
 
   constructor(message: string, statusCode: number) {
-    super(message);
-    this.statusCode = statusCode;
+    super(message)
+    this.statusCode = statusCode
   }
 }
 
 export class CustomValidationError extends ValidationError {
-  statusCode: number;
+  statusCode: number
 
   constructor(message: string, errors: ValidationErrorItem[]) {
     super(message, errors)
@@ -27,7 +27,7 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   if (error instanceof CustomError) {
-    return res.status(error.statusCode).json({ error: error.message });
+    return res.status(error.statusCode).json({ error: error.message })
   }
 
   if (error instanceof CustomValidationError) {
@@ -35,5 +35,5 @@ export const errorHandler = (
     return res.status(statusCode).json({ errors: errors.map((e) => e.message) })
   }
 
-  res.status(500).json({ error: 'Internal Server Error' });
-};
+  res.status(500).json({ error: 'Internal Server Error' })
+}

@@ -1,5 +1,5 @@
-import { DataTypes } from 'sequelize';
-import conn from '../connect';
+import { DataTypes } from 'sequelize'
+import conn from '../connect'
 
 const Book = conn.define('Book', {
   id: {
@@ -31,12 +31,12 @@ const Book = conn.define('Book', {
   }
 }, {
   freezeTableName: true,
-});
+})
 
 Book.sync().then(() => {
-  console.log("Table successfully synced");
+  console.log("Table successfully synced")
 }).catch((err) => {
-  console.log("Error syncing the table");
+  console.log("Error syncing the table")
 })
 
 export default Book
