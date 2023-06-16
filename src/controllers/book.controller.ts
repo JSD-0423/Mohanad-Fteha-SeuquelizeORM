@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express"
 import Book from "../db/models/Book"
 import BookDTO from "../dto/book.dto"
-import { ValidationErrorItem } from "sequelize"
+import { ValidationError } from "sequelize"
+import { CustomValidationError } from "../middlewares/errorHandle.middleware"
 
 const getBooks = async (res: Response, next: NextFunction) => {
   try {
@@ -12,15 +13,18 @@ const getBooks = async (res: Response, next: NextFunction) => {
   }
 }
 
-const createBook = (req: Request<{}, {}, BookDTO>, res: Response) => {
+const createBook = async (req: Request<{}, {}, BookDTO>, res: Response, next: NextFunction) => {
   const { title, author, isbn } = req.body
 
-  Book.create({ title, author, isbn, }).then((value) => {
-    res.status(201).json(value.dataValues);
-  }).catch((err) => {
-    let errors: string[] = err.errors.map((e: ValidationErrorItem) => e.message);
-    res.status(422).json({ errors })
-  })
+  try {
+    const ack = await Book.create({ title, author, isbn, })
+    res.status(201).json(ack.dataValues)
+  } catch (e) {
+    if (e instanceof ValidationError) {
+      return next(new CustomValidationError("Invalidated Fields", e.errors))
+    }
+    next(e)
+  }
 }
 
 export { getBooks, createBook }
