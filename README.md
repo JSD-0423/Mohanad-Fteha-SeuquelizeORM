@@ -8,7 +8,7 @@ This project is a TypeScript-based books library application that allows you to 
 - [x] Get a book by ID.
 - [x] Get all books.
 - [ ] Update a book.
-- [ ] Delete a book.
+- [x] Delete a book.
 
 ### Technologies Used
 
