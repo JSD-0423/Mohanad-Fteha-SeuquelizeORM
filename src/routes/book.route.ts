@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response, Router } from "express"
-import { createBook, getBooks } from "../controllers/book.controller";
+import { createBook, getBooks, getBookById } from "../controllers/book.controller";
 import Book from "../dto/book.dto";
 
 const bookRouter: Router = express.Router();
@@ -10,6 +10,10 @@ bookRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
 
 bookRouter.post('/', (req: Request<{}, {}, Book>, res: Response, next: NextFunction) => {
   createBook(req, res, next);
+})
+
+bookRouter.get('/:id', (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+  getBookById(req, res, next)
 })
 
 export default bookRouter

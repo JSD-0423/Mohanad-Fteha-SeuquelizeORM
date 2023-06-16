@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import Book from "../db/models/Book"
 import BookDTO from "../dto/book.dto"
 import { ValidationError } from "sequelize"
-import { CustomValidationError } from "../middlewares/errorHandle.middleware"
+import { CustomError, CustomValidationError } from "../middlewares/errorHandle.middleware"
 
 const getBooks = async (res: Response, next: NextFunction) => {
   try {
@@ -27,4 +27,16 @@ const createBook = async (req: Request<{}, {}, BookDTO>, res: Response, next: Ne
   }
 }
 
-export { getBooks, createBook }
+const getBookById = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  try {
+    const ack = await Book.findByPk(id)
+    if (!ack) throw new CustomError("Book not found", 404);
+
+    res.status(200).json(ack.dataValues)
+  } catch (e) {
+    next(e)
+  }
+}
+
+export { getBooks, createBook, getBookById }
