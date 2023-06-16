@@ -12,7 +12,7 @@ bookRouter.post('/', (req: Request<{}, {}, Book>, res: Response, next: NextFunct
   createBook(req, res, next);
 })
 
-bookRouter.get('/:id', (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+bookRouter.get('/:id', (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
   getBookById(req, res, next)
 })
 

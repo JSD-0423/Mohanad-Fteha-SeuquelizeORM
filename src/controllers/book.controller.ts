@@ -27,7 +27,7 @@ const createBook = async (req: Request<{}, {}, BookDTO>, res: Response, next: Ne
   }
 }
 
-const getBookById = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
+const getBookById = async (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
   const { id } = req.params
   try {
     const ack = await Book.findByPk(id)
