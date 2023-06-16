@@ -12,8 +12,8 @@ const getBooks = async (res: Response, next: NextFunction) => {
   }
 }
 
-const createBook = (req: Request | any, res: Response) => {
-  const { title, author, isbn } = req.body
+const createBook = (body: BookDTO, res: Response) => {
+  const { title, author, isbn } = body
 
   Book.create({ title, author, isbn, }).then((value) => {
     res.status(201).json(value.dataValues);

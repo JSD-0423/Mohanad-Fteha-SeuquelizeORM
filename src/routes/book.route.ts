@@ -7,8 +7,8 @@ bookRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
   getBooks(res, next);
 })
 
-bookRouter.post('/', (req, res) => {
-  createBook(req, res);
+bookRouter.post('/', (req: Request, res: Response) => {
+  createBook(req.body, res);
 })
 
 export default bookRouter
