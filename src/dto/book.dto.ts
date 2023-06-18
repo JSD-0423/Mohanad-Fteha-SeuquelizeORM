@@ -4,3 +4,7 @@ export default interface Book {
   author: string,
   isbn: string
 }
+
+type PartialBook = Partial<Book>
+
+export { PartialBook }

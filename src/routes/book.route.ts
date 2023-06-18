@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from "express"
-import { createBook, getBooks, getBookById, deleteBook } from "../controllers/book.controller"
-import Book from "../dto/book.dto"
+import { createBook, getBooks, getBookById, deleteBook, updateBook } from "../controllers/book.controller"
+import Book, { PartialBook } from "../dto/book.dto"
 
 const bookRouter: Router = express.Router()
 
@@ -14,6 +14,10 @@ bookRouter.post('/', (req: Request<{}, {}, Book>, res: Response, next: NextFunct
 
 bookRouter.get('/:id', (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
   getBookById(req, res, next)
+})
+
+bookRouter.patch('/:id', (req: Request<{ id: number }, {}, PartialBook>, res: Response, next: NextFunction) => {
+  updateBook(req, res, next)
 })
 
 bookRouter.delete("/:id", (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
