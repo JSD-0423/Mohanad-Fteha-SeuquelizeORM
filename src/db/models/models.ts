@@ -38,6 +38,10 @@ export class User extends Model {
     const hash = hashPassword(user.password)
     user.password = hash
   }
+
+  public addBook(book: Book) {
+    return this.$add('book', book)
+  }
 }
 
 @Table({
@@ -66,6 +70,10 @@ export class Book extends Model {
 
   @BelongsToMany(() => User, () => UserBooks)
   users!: User[]
+
+  public addUser(user: User) {
+    return this.$add('user', user)
+  }
 }
 
 @Table({
