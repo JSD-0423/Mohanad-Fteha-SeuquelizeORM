@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from "express"
 import { createBook, getBooks, getBookById, deleteBook, updateBook } from "../controllers/book.controller"
-import { Book } from "../db/models/User"
+import { Book } from "../db/models/models"
 
 const bookRouter: Router = express.Router()
 

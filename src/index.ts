@@ -4,10 +4,13 @@ import userRoute from "./routes/user.route"
 import { errorHandler } from "./middlewares/errorHandle.middleware"
 import connection from "./db/connect"
 import passport from "passport"
+import rentBookRoute from "./routes/rentBook.route"
+import cookieParser from "cookie-parser"
 
 const app: Application = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
 app.use(passport.initialize())
 
 require("./auth/passport")
@@ -15,6 +18,7 @@ require("./auth/passport")
 app.use('/books', bookRouter)
 app.use('/users', userRoute)
 app.use(errorHandler)
+app.use('/userBooks', rentBookRoute)
 
 connection
   .sync()

@@ -1,7 +1,7 @@
 
 import { NextFunction, Request, Response } from "express"
 import jwt from "jsonwebtoken"
-import { User } from "../db/models/User"
+import { User } from "../db/models/models"
 import { ValidationError } from "sequelize"
 import { CustomError, CustomValidationError } from "../middlewares/errorHandle.middleware"
 import { compare } from "../utils/bcrypt"
@@ -21,7 +21,7 @@ const getUsers = async (_: Request, res: Response, next: NextFunction) => {
   }
 }
 
-export const signUp = async (req: Request<{}, {}, User>, res: Response, next: NextFunction) => {
+const signUp = async (req: Request<{}, {}, User>, res: Response, next: NextFunction) => {
   const body = req.body
 
   try {
@@ -46,7 +46,7 @@ export const signUp = async (req: Request<{}, {}, User>, res: Response, next: Ne
   }
 }
 
-export const signIn = async (req: Request<{}, {}, User>, res: Response, next: NextFunction) => {
+const signIn = async (req: Request<{}, {}, User>, res: Response, next: NextFunction) => {
   const body = req.body
 
   try {
@@ -69,6 +69,8 @@ export const signIn = async (req: Request<{}, {}, User>, res: Response, next: Ne
 
     const token = generateToken(payload, "GM")
 
+    res.cookie('token', token, { httpOnly: true })
+
     res.json({
       success: true,
       token
@@ -86,4 +88,4 @@ const generateToken = (payload: any, secret: string) => {
   return token
 }
 
-export { getUsers }
+export { getUsers, signIn, signUp }
