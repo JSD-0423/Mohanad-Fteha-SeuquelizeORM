@@ -1,6 +1,5 @@
 import { Sequelize } from "sequelize-typescript"
-import { User } from "./models/User"
-import { Book } from "./models/Book"
+import { User, UserBooks, Book } from "./models/User"
 
 const connection = new Sequelize({
   dialect: "mysql",
@@ -8,7 +7,7 @@ const connection = new Sequelize({
   username: "root",
   database: "nodemysql",
   logging: false,
-  models: [Book, User],
+  models: [User, Book, UserBooks],
 })
 
 export default connection

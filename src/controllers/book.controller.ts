@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { Book } from "../db/models/Book"
+import { Book } from "../db/models/User"
 import { ValidationError } from "sequelize"
 import { CustomError, CustomValidationError } from "../middlewares/errorHandle.middleware"
 
