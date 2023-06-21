@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from "express"
-import Book from "../db/models/Book"
-import BookDTO, { PartialBook } from "../dto/book.dto"
+import { Book } from "../db/models/Book"
 import { ValidationError } from "sequelize"
 import { CustomError, CustomValidationError } from "../middlewares/errorHandle.middleware"
-import { Model } from "sequelize"
 
 const getBooks = async (res: Response, next: NextFunction) => {
   try {
@@ -14,7 +12,7 @@ const getBooks = async (res: Response, next: NextFunction) => {
   }
 }
 
-const createBook = async (req: Request<{}, {}, BookDTO>, res: Response, next: NextFunction) => {
+const createBook = async (req: Request<{}, {}, Book>, res: Response, next: NextFunction) => {
   const { title, author, isbn } = req.body
 
   try {
@@ -40,7 +38,7 @@ const getBookById = async (req: Request<{ id: number }>, res: Response, next: Ne
   }
 }
 
-const updateBook = async (req: Request<{ id: number }, {}, PartialBook>, res: Response, next: NextFunction) => {
+const updateBook = async (req: Request<{ id: number }, {}, Partial<Book>>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params
     const values = { ...req.body }

@@ -1,14 +1,14 @@
-import { Sequelize } from "sequelize"
+import { Sequelize } from "sequelize-typescript"
+import { User } from "./models/User"
+import { Book } from "./models/Book"
 
-const conn = new Sequelize("nodemysql", "root", "", {
-  host: 'localhost',
-  dialect: 'mysql'
+const connection = new Sequelize({
+  dialect: "mysql",
+  host: "localhost",
+  username: "root",
+  database: "nodemysql",
+  logging: false,
+  models: [Book, User],
 })
 
-conn.authenticate().then(() => {
-  console.log("Successfully connected to the database")
-}).catch(e => {
-  console.log("Error connecting to a database", e)
-})
-
-export default conn
+export default connection

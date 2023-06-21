@@ -1,42 +1,26 @@
-import { DataTypes } from 'sequelize'
-import conn from '../connect'
+import { Table, Column, Model, DataType } from 'sequelize-typescript'
 
-const Book = conn.define('Book', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      max: 20,
-    }
-  },
-  author: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      max: 20
-    }
-  },
-  isbn: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      min: 10,
-      max: 30
-    }
-  }
-}, {
-  freezeTableName: true,
+@Table({
+  timestamps: false,
+  tableName: "Book",
 })
 
-Book.sync().then(() => {
-  console.log("Table successfully synced")
-}).catch((err) => {
-  console.log("Error syncing the table")
-})
+export class Book extends Model {
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  title!: string
 
-export default Book
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  author!: string
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  isbn!: string
+}
