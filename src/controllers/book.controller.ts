@@ -5,7 +5,7 @@ import { CustomError, CustomValidationError } from "../middlewares/errorHandle.m
 import { validateBook, validateId } from "../middlewares/validation.middleware"
 
 
-const getBooks = async (res: Response, next: NextFunction) => {
+const getBooks = async (_: Request, res: Response, next: NextFunction) => {
   try {
     const books = await Book.findAll()
     return res.status(200).json(books)
