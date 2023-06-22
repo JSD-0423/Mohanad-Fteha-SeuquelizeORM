@@ -5,6 +5,7 @@ import { User } from "../db/models/models"
 import { ValidationError } from "sequelize"
 import { CustomError, CustomValidationError } from "../middlewares/errorHandle.middleware"
 import { compare } from "../utils/bcrypt"
+import { validateUser } from "../middlewares/validation.middleware"
 
 interface Payload {
   id: number,
@@ -25,6 +26,7 @@ const signUp = async (req: Request<{}, {}, User>, res: Response, next: NextFunct
   const body = req.body
 
   try {
+    validateUser(body)
     const user = await User.create({ ...body })
     const payload: Payload = {
       id: user.id,
@@ -50,7 +52,8 @@ const signIn = async (req: Request<{}, {}, User>, res: Response, next: NextFunct
   const body = req.body
 
   try {
-    const user = await User.findByPk(body.id)
+    validateUser(body)
+    const user = await User.findOne({ where: { email: req.body.email } })
 
 
     if (!user) {

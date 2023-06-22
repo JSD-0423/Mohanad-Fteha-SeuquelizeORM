@@ -3,6 +3,7 @@ import passport from "passport"
 import jwt from 'jsonwebtoken'
 import { Book, User, UserBooks } from "../db/models/models"
 import { CustomError } from "../middlewares/errorHandle.middleware"
+import { validateId } from "../middlewares/validation.middleware"
 
 const rentBookRoute: Router = express.Router()
 
@@ -30,12 +31,14 @@ rentBookRoute.get('/', async (req: Request, res: Response, next: NextFunction) =
   }
 })
 
-rentBookRoute.post('/rentBook/:bookId', async (req: Request<{ bookId: number }>, res: Response, next: NextFunction) => {
-  const { bookId } = req.params
+rentBookRoute.post('/rentBook/:bookId', async (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
+  validateId(req.params)
+
+  const { id } = req.params
   const userId = req.userId
 
   const user = await User.findByPk(userId, { attributes: { exclude: ["password"] } })
-  const book = await Book.findByPk(bookId)
+  const book = await Book.findByPk(id)
 
 
   if (!book)

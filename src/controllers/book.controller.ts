@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express"
 import { Book } from "../db/models/models"
 import { ValidationError } from "sequelize"
 import { CustomError, CustomValidationError } from "../middlewares/errorHandle.middleware"
+import { validateBook, validateId } from "../middlewares/validation.middleware"
+
 
 const getBooks = async (res: Response, next: NextFunction) => {
   try {
@@ -16,6 +18,7 @@ const createBook = async (req: Request<{}, {}, Book>, res: Response, next: NextF
   const { title, author, isbn } = req.body
 
   try {
+    validateBook(req.body)
     const ack = await Book.create({ title, author, isbn })
     res.status(201).json(ack.dataValues)
   } catch (e) {
@@ -27,6 +30,7 @@ const createBook = async (req: Request<{}, {}, Book>, res: Response, next: NextF
 }
 
 const getBookById = async (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
+  validateId(req.params)
   const { id } = req.params
   try {
     const ack = await Book.findByPk(id)
@@ -40,10 +44,11 @@ const getBookById = async (req: Request<{ id: number }>, res: Response, next: Ne
 
 const updateBook = async (req: Request<{ id: number }, {}, Partial<Book>>, res: Response, next: NextFunction) => {
   try {
+    validateId(req.params)
     const { id } = req.params
     const values = { ...req.body }
     const ack = await Book.update({ ...values }, { where: { id } })
-    console.log(ack)
+
     if (ack["0"] !== undefined) {
       res.status(204).json({ msg: "No content changed" })
       return
@@ -56,9 +61,11 @@ const updateBook = async (req: Request<{ id: number }, {}, Partial<Book>>, res: 
 }
 
 const deleteBook = async (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
-  const { id } = req.params
 
   try {
+    validateId(req.params)
+    const { id } = req.params
+
     const ack = await Book.destroy({ where: { id } })
     if (!ack) throw new CustomError("Book not found", 404)
 
