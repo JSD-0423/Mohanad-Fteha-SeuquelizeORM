@@ -17,8 +17,8 @@ require("./auth/passport")
 
 app.use('/books', bookRouter)
 app.use('/users', userRoute)
-app.use(errorHandler)
 app.use('/userBooks', rentBookRoute)
+app.use(errorHandler)
 
 connection
   .sync()

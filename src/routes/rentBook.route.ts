@@ -31,27 +31,30 @@ rentBookRoute.get('/', async (req: Request, res: Response, next: NextFunction) =
   }
 })
 
-rentBookRoute.post('/rentBook/:bookId', async (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
-  validateId(req.params)
+rentBookRoute.post('/rentBook/:id', async (req: Request<{ id: number }>, res: Response, next: NextFunction) => {
+  try {
+    validateId(req.params)
 
-  const { id } = req.params
-  const userId = req.userId
+    const { id } = req.params
+    const userId = req.userId
 
-  const user = await User.findByPk(userId, { attributes: { exclude: ["password"] } })
-  const book = await Book.findByPk(id)
+    const user = await User.findByPk(userId, { attributes: { exclude: ["password"] } })
+    const book = await Book.findByPk(id, { include: { model: User } })
 
+    if (!book || (book?.users && book.users.length > 0))
+      throw new CustomError("Book not found", 404)
+    if (!user)
+      throw new CustomError("User not found", 404)
 
-  if (!book)
-    throw new CustomError("Book not found", 404)
-  if (!user)
-    throw new CustomError("User not found", 404)
+    const userBook = await UserBooks.create({
+      userId: user.id,
+      bookId: book.id
+    })
 
-  const userBook = await UserBooks.create({
-    userId: user.id,
-    bookId: book.id
-  })
-
-  res.status(200).json(userBook)
+    res.status(200).json(userBook)
+  } catch (e) {
+    next(e)
+  }
 })
 
 export default rentBookRoute
