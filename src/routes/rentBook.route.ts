@@ -41,7 +41,7 @@ rentBookRoute.post('/rentBook/:id', async (req: Request<{ id: number }>, res: Re
     const user = await User.findByPk(userId, { attributes: { exclude: ["password"] } })
     const book = await Book.findByPk(id, { include: { model: User } })
 
-    if (!book || (book?.users && book.users.length > 0))
+    if (!book || (book.users.length > 0))
       throw new CustomError("Book not found", 404)
     if (!user)
       throw new CustomError("User not found", 404)
@@ -51,7 +51,7 @@ rentBookRoute.post('/rentBook/:id', async (req: Request<{ id: number }>, res: Re
       bookId: book.id
     })
 
-    res.status(200).json(userBook)
+    res.json(userBook)
   } catch (e) {
     next(e)
   }
