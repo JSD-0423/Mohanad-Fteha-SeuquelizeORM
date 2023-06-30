@@ -1,94 +1,94 @@
 
-import { NextFunction, Request, Response } from "express"
-import jwt from "jsonwebtoken"
-import { User } from "../db/models/models"
-import { ValidationError } from "sequelize"
-import { CustomError, CustomValidationError } from "../middlewares/errorHandle.middleware"
-import { compare } from "../utils/bcrypt"
-import { validateUser } from "../middlewares/validation.middleware"
+import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import { User } from "../db/models/User";
+import { ValidationError } from "sequelize";
+import { CustomError, CustomValidationError } from "../middlewares/errorHandle.middleware";
+import { compare } from "../utils/bcrypt";
+import { validateUser } from "../middlewares/validation.middleware";
 
 interface Payload {
   id: number,
   name: string,
-  email: string
+  email: string;
 }
 
 const getUsers = async (_: Request, res: Response, next: NextFunction) => {
   try {
-    const users = await User.findAll({ attributes: { exclude: ['password'] } })
-    return res.json(users)
+    const users = await User.findAll({ attributes: { exclude: ['password'] } });
+    return res.json(users);
   } catch (e) {
-    return next(e)
+    return next(e);
   }
-}
+};
 
 const signUp = async (req: Request<{}, {}, User>, res: Response, next: NextFunction) => {
-  const body = req.body
+  const body = req.body;
 
   try {
-    validateUser(body)
-    const user = await User.create({ ...body })
+    validateUser(body);
+    const user = await User.create({ ...body });
     const payload: Payload = {
       id: user.id,
       name: user.name,
       email: user.email
-    }
+    };
 
     res.json({
       success: true,
       user: payload
-    })
+    });
   } catch (e) {
-    console.log(e)
+    console.log(e);
 
     if (e instanceof ValidationError) {
-      return next(new CustomValidationError("Invalidated Fields", e.errors))
+      return next(new CustomValidationError("Invalidated Fields", e.errors));
     }
-    next(e)
+    next(e);
   }
-}
+};
 
 const signIn = async (req: Request<{}, {}, User>, res: Response, next: NextFunction) => {
-  const body = req.body
+  const body = req.body;
 
   try {
-    validateUser(body)
-    const user = await User.findOne({ where: { email: req.body.email } })
+    validateUser(body);
+    const user = await User.findOne({ where: { email: req.body.email } });
 
 
     if (!user) {
-      throw new CustomError("User not found", 404)
+      throw new CustomError("User not found", 404);
     }
 
     if (!compare(body.password, user.password)) {
-      throw new CustomError("Invalid credentials", 401)
+      throw new CustomError("Invalid credentials", 401);
     }
 
     const payload: Payload = {
       id: user.id,
       name: user.name,
       email: user.email
-    }
+    };
 
-    const token = generateToken(payload, "GM")
+    const token = generateToken(payload, "GM");
 
-    res.cookie('token', token, { httpOnly: true })
+    res.cookie('token', token, { httpOnly: true });
 
     res.json({
       success: true,
       token
-    })
+    });
   } catch (e) {
     if (e instanceof ValidationError) {
-      return next(new CustomValidationError("Invalidated Fields", e.errors))
+      return next(new CustomValidationError("Invalidated Fields", e.errors));
     }
-    next(e)
+    next(e);
   }
-}
+};
 
 const generateToken = (payload: any, secret: string) => {
-  const token = jwt.sign(payload, secret, { expiresIn: '10m' })
-  return token
-}
+  const token = jwt.sign(payload, secret, { expiresIn: '10m' });
+  return token;
+};
 
-export { getUsers, signIn, signUp }
+export { getUsers, signIn, signUp };

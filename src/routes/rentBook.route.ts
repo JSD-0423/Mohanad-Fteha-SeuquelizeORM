@@ -1,7 +1,9 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import passport from "passport";
 import jwt from 'jsonwebtoken';
-import { Book, User, UserBooks } from "../db/models/models";
+import { User } from "../db/models/User";
+import { Book } from "../db/models/Book";
+import { UserBooks } from "../db/models/UserBooks";
 import { CustomError } from "../middlewares/errorHandle.middleware";
 import { validateId } from "../middlewares/validation.middleware";
 
